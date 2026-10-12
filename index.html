@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The SB Edit | Track Your Order</title>
   <style>
     body {
@@ -17,53 +18,35 @@
       text-align: center;
       padding: 28px 15px;
     }
-    header h1 {
-      margin: 0;
-      letter-spacing: 3px;
-    }
-    header p {
-      margin-bottom: 0;
-      color: white;
-    }
+    header h1 { letter-spacing: 3px; }
+    header p { color: white; }
     main {
-      max-width: 450px;
-      margin: 35px auto;
-      padding: 25px;
+      max-width: 420px;
+      margin: 30px auto;
+      padding: 24px;
       background: white;
       border-radius: 14px;
       box-shadow: 0 4px 18px #00000012;
     }
-    h2 { text-align: center; }
     label { display: block; margin-top: 18px; }
-    input {
+    input, button {
       width: 100%;
       box-sizing: border-box;
       padding: 13px;
       margin-top: 8px;
-      border: 1px solid #ddd;
       border-radius: 8px;
       font-size: 16px;
     }
+    input { border: 1px solid #ddd; }
     button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 20px;
+      margin-top: 22px;
+      border: 0;
       background: #ff8fbd;
       color: #111;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
       font-weight: bold;
     }
-    #result {
-      margin-top: 22px;
-      line-height: 1.8;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
-    }
+    #result { margin-top: 20px; line-height: 1.6; }
+    footer { text-align: center; padding: 20px; font-size: 13px; }
   </style>
 </head>
 <body>
@@ -71,30 +54,87 @@
     <h1>THE SB EDIT</h1>
     <p>more than just skirts</p>
   </header>
+
   <main>
     <h2>Track Your Order 💗</h2>
-    <p>Enter the order number we gave you to check your order status.</p>
+    <p>Enter your order number and the phone number used when ordering.</p>
+
     <label for="order">Order Number</label>
     <input id="order" type="text" placeholder="e.g. SB001">
-    <button onclick="trackOrder()">Track My Order</button>
-    <div id="result"></div>
+
+    <label for="phone">Phone Number</label>
+    <input id="phone" type="tel" placeholder="Phone number used when ordering">
+
+    <button id="trackButton" onclick="trackOrder()">Track My Order</button>
+    <div id="result" role="status"></div>
   </main>
+
   <footer>Thank you for shopping with The SB Edit 💕</footer>
+
   <script>
-    function trackOrder() {
-      async function trackOrder() {
-  const order = document.getElementById("order").value.trim();
-  const result = document.getElementById("result");
+    const SUPABASE_URL = uicqsmatzichyfluatjo
+    const SUPABASE_KEY = sb_publishable_yo4yt7C39tiIGfVbojWJZg_cNx2E3h1
 
-  if (!order) {
-    result.textContent = "Please enter your order number.";
-    return;
-  }
+    async function trackOrder() {
+      const order = document.getElementById("order").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const result = document.getElementById("result");
+      const button = document.getElementById("trackButton");
 
-  result.textContent =
-    "We still need to connect your Supabase details to finish tracking.";
-}
+      if (!order || !phone) {
+        result.textContent = "Please enter both your order number and phone number.";
+        return;
+      }
+
+      if (SUPABASE_URL.includes("PASTE_YOUR") ||
+          SUPABASE_KEY.includes("PASTE_YOUR")) {
+        result.textContent = "The tracking connection still needs to be configured.";
+        return;
+      }
+
+      button.disabled = true;
+      result.textContent = "Checking your order...";
+
+      try {
+        const response = await fetch(
+          SUPABASE_URL.replace(/\/$/, "") +
+          "/rest/v1/rpc/track_sb_edit_order",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_KEY,
+              "Authorization": "Bearer " + SUPABASE_KEY
+            },
+            body: JSON.stringify({
+              p_order_number: order,
+              p_phone_number: phone
+            })
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Tracking request failed");
+        }
+
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+          result.textContent =
+            "Order not found. Check your details or contact The SB Edit.";
+        } else {
+          result.textContent =
+            "Order: " + data[0].order_number +
+            " | Status: " + data[0].status;
+        }
+      } catch (error) {
+        result.textContent =
+          "We couldn't check your order right now. Please try again later.";
+      } finally {
+        button.disabled = false;
+      }
     }
   </script>
 </body>
 </html>
+
