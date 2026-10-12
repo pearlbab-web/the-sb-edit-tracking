@@ -1,1 +1,96 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The SB Edit | Track Your Order</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff5f9;
+      color: #222;
+    }
+    header {
+      background: #111;
+      color: #ff8fbd;
+      text-align: center;
+      padding: 28px 15px;
+    }
+    header h1 {
+      margin: 0;
+      letter-spacing: 3px;
+    }
+    header p {
+      margin-bottom: 0;
+      color: white;
+    }
+    main {
+      max-width: 450px;
+      margin: 35px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px #00000012;
+    }
+    h2 { text-align: center; }
+    label { display: block; margin-top: 18px; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      margin-top: 8px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      background: #ff8fbd;
+      color: #111;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    #result {
+      margin-top: 22px;
+      line-height: 1.8;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>THE SB EDIT</h1>
+    <p>more than just skirts</p>
+  </header>
+  <main>
+    <h2>Track Your Order 💗</h2>
+    <p>Enter the order number we gave you to check your order status.</p>
+    <label for="order">Order Number</label>
+    <input id="order" type="text" placeholder="e.g. SB001">
+    <button onclick="trackOrder()">Track My Order</button>
+    <div id="result"></div>
+  </main>
+  <footer>Thank you for shopping with The SB Edit 💕</footer>
+  <script>
+    function trackOrder() {
+      const order = document.getElementById("order").value.trim();
+      const result = document.getElementById("result");
+      if (!order) {
+        result.textContent = "Please enter your order number.";
+        return;
+      }
+      result.textContent =
+        "We couldn't find that order yet. Please check your order number or contact The SB Edit.";
+    }
+  </script>
+</body>
+</html>
