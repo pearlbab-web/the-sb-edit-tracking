@@ -82,14 +82,18 @@
   <footer>Thank you for shopping with The SB Edit 💕</footer>
   <script>
     function trackOrder() {
-      const order = document.getElementById("order").value.trim();
-      const result = document.getElementById("result");
-      if (!order) {
-        result.textContent = "Please enter your order number.";
-        return;
-      }
-      result.textContent =
-        "We couldn't find that order yet. Please check your order number or contact The SB Edit.";
+      async function trackOrder() {
+  const order = document.getElementById("order").value.trim();
+  const result = document.getElementById("result");
+
+  if (!order) {
+    result.textContent = "Please enter your order number.";
+    return;
+  }
+
+  result.textContent =
+    "We still need to connect your Supabase details to finish tracking.";
+}
     }
   </script>
 </body>
